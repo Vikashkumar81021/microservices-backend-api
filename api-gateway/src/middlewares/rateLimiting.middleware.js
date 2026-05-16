@@ -1,7 +1,5 @@
 import redis from "./../config/redis.js";
-const { config } = require("../config");
-
-import { TooManyRequestsError } from "../utils/error";
+import { TooManyRequestsError } from "../utils/error.js";
 import { logger } from "../config/logger.js";
 
 /**

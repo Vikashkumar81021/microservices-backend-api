@@ -11,7 +11,7 @@ import { corsMiddleware } from "./middlewares/cors.middleware.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 import { notFound } from "./middlewares/notFound.middleware.js";
 import { reqLogger } from "./middlewares/req.middleware.js";
-
+import routes from "./routes/index.js";
 const app = express();
 app.use(corsMiddleware);
 app.use(
@@ -48,7 +48,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-// app.use("/api", routes);
+app.use("/api", routes);
 
 app.use(notFound);
 app.use(errorMiddleware);

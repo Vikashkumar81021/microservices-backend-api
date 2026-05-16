@@ -6,7 +6,7 @@ const config = {
   SERVICE_NAME: packageJson.name,
   NODE_ENV: process.env.NODE_ENV || "development",
 
-  REDIS_URL: process.env.REDIS_URL,
+  REDIS_URL: process.env.REDIS_URL || "redis://:irctpass@localhost:6379",
   ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS || "http://localhost:3000",
 
   JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET_KEY,

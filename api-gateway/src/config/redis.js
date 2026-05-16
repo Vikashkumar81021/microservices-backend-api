@@ -50,7 +50,7 @@ import { createClient } from "redis";
 import { config } from "./index.js";
 
 const RedisClient = createClient({
-  url: config.REDIS_URL,
+  url: "redis://:irctpass@localhost:6379",
 });
 
 RedisClient.on("connect", () => {

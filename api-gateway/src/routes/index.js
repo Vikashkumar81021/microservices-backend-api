@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleware from "../middlewares/auth.middleware";
+import authMiddleware from "../middlewares/auth.middleware.js";
 import {
   ipRateLimit,
   combinedRateLimit,
@@ -20,3 +20,13 @@ router.get(
   combinedRateLimit(),
   userServiceProxy,
 );
+
+router.get("/gateway/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Health Check",
+    timeStamp: new Date().toString(),
+  });
+});
+
+export default router;
