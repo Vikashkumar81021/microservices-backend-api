@@ -42,8 +42,9 @@ const verifyOtp = asyncHandler(async (req, res) => {
 });
 
 const login = asyncHandler(async (req, res) => {
+  console.log("request is", req.body);
+
   const { email, password } = req.body;
-  console.log(req.body);
 
   if (!email || !password) {
     throw new BadRequestError("missing fields are required");

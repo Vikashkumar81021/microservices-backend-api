@@ -4,6 +4,8 @@ import { BadRequestError } from "../utils/error.js";
 
 const getProfileController = asyncHandler(async (req, res) => {
   const userId = req.user.id;
+  console.log("USERID", userId);
+
   if (!userId) {
     throw new BadRequestError("User ID is missing");
   }

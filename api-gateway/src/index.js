@@ -13,6 +13,7 @@ import { notFound } from "./middlewares/notFound.middleware.js";
 import { reqLogger } from "./middlewares/req.middleware.js";
 import routes from "./routes/index.js";
 const app = express();
+app.use(express.json());
 app.use(corsMiddleware);
 app.use(
   helmet({

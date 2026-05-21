@@ -18,8 +18,8 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(corsMiddleware);
 
-app.use("/api/v1/auth", authroutes);
-app.use("/api/v1/userroutes", userroutes);
+app.use("/auth", authroutes);
+app.use("/api", userroutes);
 app.use(errorMiddleware);
 const startServer = async () => {
   try {

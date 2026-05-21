@@ -1,6 +1,7 @@
-import redis from "./../config/redis.js";
+import redis from "../config/redis.js";
 import { TooManyRequestsError } from "../utils/error.js";
 import { logger } from "../config/logger.js";
+import { config } from "../config/index.js";
 
 /**
  * Rate limiting strategies:
@@ -18,25 +19,22 @@ async function rateLimiter(key, maxRequests, windowMs) {
 
   try {
     // Use Redis pipeline for atomic operations
-    const pipeline = redis.pipeline();
+    const pipeline = redis.multi();
 
-    // Remove old entries outside the current window
-    pipeline.zremrangebyscore(key, 0, windowStart);
+    pipeline.zRemRangeByScore(key, 0, windowStart);
 
-    // Add current request
-    pipeline.zadd(key, now, `${now}-${Math.random()}`);
+    pipeline.zAdd(key, {
+      score: now,
+      value: `${now}-${Math.random()}`,
+    });
 
-    // Count requests in current window
-    pipeline.zcard(key);
+    pipeline.zCard(key);
 
-    // Set expiry on the key
     pipeline.expire(key, Math.ceil(windowMs / 1000));
 
     const results = await pipeline.exec();
 
-    // Get the count from the third command (index 2)
-    const requestCount = results[2][1];
-
+    const requestCount = results[2];
     if (requestCount > maxRequests) {
       const oldestRequest = await redis.zrange(key, 0, 0, "WITHSCORES");
       const resetTime = parseInt(oldestRequest[1]) + windowMs;
