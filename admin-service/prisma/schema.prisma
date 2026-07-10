@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+enum SeatType{
+  OWNER
+  MIDDLE
+  UPPER
+  SIDE_UPPER
+  SIDE_LOWER
+}
+model Station {
+  id  String @unique @default(uuid())
+  name String @unique
+  code String
+  city String
+  state String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  routeStation RouteStation[]
+  @@index([name])
+  @@index([code])
+  @@map("stations")
+}
+
+model Train {
+  id  String @id @default(uuid())
+  traineNumber String @unique 
+  trainName String
+  coachName String
+  totalSeats Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+  seats Seats[]
+  route Route?
+  schedule Schedule[]
+  @@map("trains")
+}
+
+model Seat{
+  id String @id @default(uuid())
+  trainId String
+  seatNumber Int
+  seatType  SeatType
+  price Float
+  train Train @relation(fields: [trainId],references: [id],onDelete: Cascade)
+  @@unique([trainId,seatNumber])
+  @@map("seats")
+}
+
+model Route{
+  id String @id @default(uuid())
+  trainId String @unique
+   train Train @relation(fields: [trainId],references: [id],onDelete: Cascade)
+   routeStations RouteStation[]
+   @@map("routes")
+}
+model RouteStation{
+  id String @id @default(uuid())
+  routeId String
+  stationId String
+  sequnceNumber Int
+  arrivalTime String?
+  departureTime String?
+   distanceFromOrigin Float @default(0)
+   route Route @relation(fields: [routeId],references: [id],onDelete: Cascade)
+   station Station @relation(fields: [stationId],references: [id],onDelete: Cascade)
+
+   @@unique([routeId,sequnceNumber])
+   @@unique([routeId,stationId])
+   @@map("route_stations")
+}
+
+model Schedule{
+  id String  @id @default(uuid())
+  trainId String
+  departureDate DateTime @db.Date
+  status  ScheduleStatus @default(ACTIVE)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
+  train Train @relation(fields: [trainId],references: [id],onDelete: Cascade)
+  
+}
